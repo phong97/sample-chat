@@ -10,8 +10,14 @@ export function ChatContainer() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fetchMessages = async () => {
-    const history = await fetchMessageHistory();
-    setMessages(history);
+    try {
+      const history = await fetchMessageHistory();
+      // Ensure history is an array before setting state
+      setMessages(Array.isArray(history) ? history : []);
+    } catch (error) {
+      console.error('Failed to fetch message history:', error);
+      setMessages([]);
+    }
   };
 
   useEffect(() => {
